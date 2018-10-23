@@ -1,0 +1,22 @@
+{
+  "name": "gititzon",
+  "version": "1.0.0",
+  "description": "Packeges for run",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roydavis99/GitItZon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/roydavis99/GitItZon/issues"
+  },
+  "homepage": "https://github.com/roydavis99/GitItZon#readme",
+  "dependencies": {
+    "mysql": "^2.16.0"
+  }
+}
