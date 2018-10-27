@@ -51,14 +51,74 @@ function Buyer() {
 }
 
 function BuyerSelect(result) {
-    if(isNaN( result.amount)){
+    if (isNaN(result.amount)) {
         console.log('You must specify a numeric amount!');
         Buyer();
     }
 
     let name = result.selection.split('|')[0].trim();
     let productCode = result.selection.split('|')[1].trim();
-    Items.BuyItem(name, productCode,result.amount, Main);
+    Items.BuyItem(name, productCode, result.amount, Main);
+}
+
+function AddInventory(){
+    var message = [{
+        type: 'list',
+        message: 'Make a selection:',
+        name: 'selection',
+        choices: Items.GetProductNames()
+    },
+    {
+        message: 'How Many:',
+        name: 'amount'
+    }];
+    prompt(message, AddInventorySelect);
+}
+
+function AddInventorySelect(result){
+    if (isNaN(result.amount)) {
+        console.log('You must specify a numeric amount!');
+        Buyer();
+    }
+
+    let name = result.selection.split('|')[0].trim();
+    let productCode = result.selection.split('|')[1].trim();
+    Items.StockItem(name, productCode, result.amount, Manager);
+}
+
+function Manager() {
+    var message = [{
+        type: 'list',
+        message: 'Make a selection:',
+        name: 'selection',
+        choices: ['View Products', 'Low Inventory', 'Add to Inventory', 'Create New Product', 'Back']
+    }];
+    prompt(message, ManagerSelect);
+}
+
+function ManagerSelect(result) {
+    switch (result.selection) {
+        case 'View Products':
+            Items.Display();
+            Manager();
+            break;
+        case 'Low Inventory':
+            Items.DisplayLowList();
+            Manager();
+            break;
+        case 'Add to Inventory':
+            
+            break;
+        case 'Create New Product':
+            break;
+        case 'Back':
+            LoadAll(Main);
+            break;
+        default:
+            Manager();
+            break;
+
+    }
 }
 
 function MainResult(result) {
@@ -68,7 +128,7 @@ function MainResult(result) {
             Buyer();
             break;
         case "Manager":
-            console.log("Not set up yet");
+            Manager();
             break;
     }
 }

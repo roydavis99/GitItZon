@@ -21,13 +21,24 @@ function Items() {
         console.log(list + '\n');
     }
 
+    this.DisplayLowList = function () {
+        var list = '\nProduct Code\tProduct Name\t Department Name\tPrice\tStock Quantity\tDescription';
+        list += '\n------------------------------------------------------------------------------------------------'
+        List.forEach(x => {
+            if (x.amount <= 5) {
+                list += `\n${x.Display()}`;
+            }
+        });
+        console.log(list + '\n');
+    }
+
     this.LoadAll = function (callback) {
         let readQuery = "SELECT * FROM product";
         activeCallback = callback;
         db.Connect();
-    
-        db.GetConnection().query(readQuery,LoadCallback);
-        
+
+        db.GetConnection().query(readQuery, LoadCallback);
+
     }
 
     this.LoadByDepartment = function (department) {
@@ -58,10 +69,10 @@ function Items() {
 
     }
 
-    this.GetList = function(){
+    this.GetList = function () {
         return List;
     }
-    this.GetProductNames = function() {
+    this.GetProductNames = function () {
         let list = [];
         List.forEach(x => {
             list.push(`${x.ProductName} | ${x.ProductCode}`);
@@ -69,18 +80,24 @@ function Items() {
         return list;
     }
 
-    let GetItem = function(name, productCode){
+    let GetItem = function (name, productCode) {
         let item;
-        item = List.filter(x => 
+        item = List.filter(x =>
             x.ProductName === name && x.ProductCode === productCode
         );
         return item;
 
     }
 
-    this.BuyItem = function(name, productCode, amount, callback){
-        let item = GetItem(name,productCode);
+    this.BuyItem = function (name, productCode, amount, callback) {
+        let item = GetItem(name, productCode);
+        console.log(item);
         item.Buy(amount, callback);
+    }
+
+    this.StockItem = function(name, productCode, amount, callback){
+        let item = GetItem(name,productCode);
+        item.Restock(amount, callback);
     }
 
 }
