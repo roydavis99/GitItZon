@@ -61,7 +61,7 @@ function BuyerSelect(result) {
     Items.BuyItem(name, productCode, result.amount, Main);
 }
 
-function AddInventory(){
+function AddInventory() {
     var message = [{
         type: 'list',
         message: 'Make a selection:',
@@ -75,7 +75,7 @@ function AddInventory(){
     prompt(message, AddInventorySelect);
 }
 
-function AddInventorySelect(result){
+function AddInventorySelect(result) {
     if (isNaN(result.amount)) {
         console.log('You must specify a numeric amount!');
         Buyer();
@@ -107,7 +107,7 @@ function ManagerSelect(result) {
             Manager();
             break;
         case 'Add to Inventory':
-            
+            AddInventory();
             break;
         case 'Create New Product':
             break;
