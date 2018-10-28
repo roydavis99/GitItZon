@@ -1,6 +1,6 @@
 let database = require(__dirname + '/database.js');
 
-let db = new database('localhost', '3306', 'root', 'root', 'bamizon');
+let db = new database();
 
 function Item(uuid, productCode, productName, departmentName, description, price, stockQuantity) {
     let _uuid = uuid;
@@ -16,15 +16,15 @@ function Item(uuid, productCode, productName, departmentName, description, price
         return `${this.ProductCode}\t${this.ProductName}\t${this.DepartmentName}\t${this.Price}\t${this.StockQuantity}\t${this.Description}`;
     };
 
-    this.Buy = function (units, callback) { 
+    this.Buy = function (units, callback) {
         //Want it to be public
         //buy the item and reduce the stock quantity buy the amount passed in
         this.StockQuantity -= units;
-        console.log('Bought: ' + units +'\nLeft: ' + this.StockQuantity);
+        console.log('Bought: ' + units + '\nLeft: ' + this.StockQuantity);
         activeCallback = callback;// || activeCallback;
         //console.log('Bought: ' + units +'\nLeft: ' + this.StockQuantity);
         //ApplyChange();
-
+        return;
     };
 
     this.Restock = function (units, callback) {
@@ -32,6 +32,7 @@ function Item(uuid, productCode, productName, departmentName, description, price
         activeCallback = callback || activeCallback;
 
         ApplyChange();
+        return;
     };
 
     let ApplyChange = function () { //keep hidden
@@ -48,11 +49,25 @@ function Item(uuid, productCode, productName, departmentName, description, price
             }, InsertCallback);
 
         } else {
-
+            db.GetConnection().query(connection.query(
+                "UPDATE products SET ? WHERE ?",
+                [
+                    {
+                        ProductCode: this.ProductCode,
+                        ProductName: this.ProductName,
+                        DepartmentName: this.DepartmentName,
+                        Description: this.Description,
+                        Price: this.Price,
+                        StockQuantity: this.StockQuantity
+                    },
+                    {
+                        uuid: _uuid
+                    }
+                ],
+                InsertCallback));
         }
-
-
     }
+
     function InsertCallback(error, result) {
         if (error) {
             console.log(error);
@@ -60,10 +75,10 @@ function Item(uuid, productCode, productName, departmentName, description, price
         }
         console.log(result);
         db.CloseConnection();
-        if (activeCallback) { activeCallback(); }
+        if (activeCallback) {
+            activeCallback();
+        }
     }
-
-
 }
 
 module.exports = Item;

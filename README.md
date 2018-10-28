@@ -4,15 +4,6 @@ Amazon Like Project
 * Run
 npm install
 
+#Database
+* Create Mysql database using Schema.sql and seed.sql to populate new database
 
-# Requierments
-* DataBase
-    * Database Named Bamizon
-    * Table Products
-        * uuid
-        * Item_id
-        * Product_Name
-        * Department_Name
-        * Price
-        * Stock_quantity
-    * * Table 

@@ -25,7 +25,7 @@ function Items() {
         var list = '\nProduct Code\tProduct Name\t Department Name\tPrice\tStock Quantity\tDescription';
         list += '\n------------------------------------------------------------------------------------------------'
         List.forEach(x => {
-            if (x.amount <= 5) {
+            if (x.StockQuantity <= 5) {
                 list += `\n${x.Display()}`;
             }
         });
@@ -90,9 +90,11 @@ function Items() {
     }
 
     this.BuyItem = function (name, productCode, amount, callback) {
+        console.log('Buy Item');
         let item = GetItem(name, productCode);
         console.log(item);
-        item.Buy(amount, callback);
+        callback();
+        //item.Buy(amount, callback);
     }
 
     this.StockItem = function(name, productCode, amount, callback){
