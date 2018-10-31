@@ -16,11 +16,7 @@ function Item(uuid, productCode, productName, departmentName, description, price
         return `${this.ProductCode}\t${this.ProductName}\t${this.DepartmentName}\t${this.Price}\t${this.StockQuantity}\t${this.Description}`;
     };
 
-    this.BuyItem = function(units, callback){
-        Buy(units,callback);
-    }
-
-    let Buy = function (units, callback) {
+    this.Buy = function (units, callback) {
         //Want it to be public
         //buy the item and reduce the stock quantity buy the amount passed in
         this.StockQuantity -= units;

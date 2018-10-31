@@ -95,7 +95,7 @@ function Items() {
         console.log('Buy Item');
         let item = GetItem(name, productCode);
         console.log(item);
-        item.BuyItem(_amount, _callback);
+        item.Buy(_amount, _callback);
         //callback();
     }
 
