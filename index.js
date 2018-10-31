@@ -4,12 +4,9 @@ let inquirer = require('inquirer');
 
 let Items = new items();
 
-//console.log(Items.DisplayList());
 
 function prompt(object, callback) {
-    //console.log(object);
     inquirer.prompt(object).then(result => {
-        //console.log(result);
         callback(result);
     });
 }
@@ -20,9 +17,6 @@ function LoadAll(callback) {
 }
 
 function Main() {
-
-    console.log('Here');
-    Items.Display();
     var message = [{
         type: 'list',
         message: 'Who are you',
@@ -33,7 +27,6 @@ function Main() {
 }
 
 function Buy() {
-    console.log('Here');
     Items.Display();
     var message = [{
         type: 'list',
@@ -49,18 +42,19 @@ function Buy() {
 }
 
 function BuySelect(result) {
+
     if (isNaN(result.amount)) {
         console.log('You must specify a numeric amount!');
         Buyer();
+    } else {
+        let amount = parseInt(result.amount)
+        let name = result.selection.split('|')[0].trim();
+        let productCode = result.selection.split('|')[1].trim();
+        Items.BuyItem(name, productCode, amount, Buyer);
     }
-
-    let name = result.selection.split('|')[0].trim();
-    let productCode = result.selection.split('|')[1].trim();
-    Items.BuyItem(name, productCode, result.amount, Buyer);
 }
 
 function Buyer() {
-    //Items.Display();
     var message = [{
         type: 'list',
         message: 'Make a selection:',

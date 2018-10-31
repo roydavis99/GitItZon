@@ -82,7 +82,7 @@ function Items() {
 
     let GetItem = function (name, productCode) {
         let item;
-        item = List.filter(x =>
+        item = List.find(x =>
             x.ProductName === name && x.ProductCode === productCode
         );
         return item;
@@ -90,11 +90,13 @@ function Items() {
     }
 
     this.BuyItem = function (name, productCode, amount, callback) {
+        let _amount = amount;
+        let _callback = callback;
         console.log('Buy Item');
         let item = GetItem(name, productCode);
         console.log(item);
-        callback();
-        //item.Buy(amount, callback);
+        item.BuyItem(_amount, _callback);
+        //callback();
     }
 
     this.StockItem = function(name, productCode, amount, callback){

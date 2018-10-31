@@ -9,14 +9,18 @@ function Item(uuid, productCode, productName, departmentName, description, price
     this.DepartmentName = departmentName
     this.Description = description;
     this.Price = price;
-    this.StockQuantity = stockQuantity;
+    this.StockQuantity = parseInt(stockQuantity);
     let activeCallback;
 
     this.Display = function () {
         return `${this.ProductCode}\t${this.ProductName}\t${this.DepartmentName}\t${this.Price}\t${this.StockQuantity}\t${this.Description}`;
     };
 
-    this.Buy = function (units, callback) {
+    this.BuyItem = function(units, callback){
+        Buy(units,callback);
+    }
+
+    let Buy = function (units, callback) {
         //Want it to be public
         //buy the item and reduce the stock quantity buy the amount passed in
         this.StockQuantity -= units;
@@ -24,7 +28,7 @@ function Item(uuid, productCode, productName, departmentName, description, price
         activeCallback = callback;// || activeCallback;
         //console.log('Bought: ' + units +'\nLeft: ' + this.StockQuantity);
         //ApplyChange();
-        return;
+        //return;
     };
 
     this.Restock = function (units, callback) {
