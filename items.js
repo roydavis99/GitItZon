@@ -33,8 +33,11 @@ function Items() {
     }
 
     this.LoadAll = function (callback) {
+        _LoadAll(callback);
+    }
+    let _LoadAll = function (callback) {
         let readQuery = "SELECT * FROM product";
-        activeCallback = callback;
+        activeCallback = callback || activeCallback;
         db.Connect();
 
         db.GetConnection().query(readQuery, LoadCallback);
@@ -45,7 +48,7 @@ function Items() {
 
     }
 
-    LoadCallback = function (error, result) {
+    let LoadCallback = function (error, result) {
 
         if (error) {
             console.log(error);
@@ -53,15 +56,13 @@ function Items() {
             return;
         }
 
-        //console.log(result);
         CreateList(result);
-        //DisplayList();
         db.CloseConnection();
         activeCallback();
     }
 
     function CreateList(collection) {
-        this.List = [];
+        List = [];
         collection.forEach(x => {
             newItem = new item(x.uuid, x.ProductCode, x.ProductName, x.DepartmentName, x.Description, x.Price, x.StockQuantity)
             List.push(newItem);
@@ -89,19 +90,33 @@ function Items() {
 
     }
 
+    let ContainsCode = function (code) {
+        return List.filter(x => {
+            x.productCode === code;
+        }).length > 0;
+    }
+
     this.BuyItem = function (name, productCode, amount, callback) {
         let _amount = amount;
         let _callback = callback;
-        console.log('Buy Item');
         let item = GetItem(name, productCode);
-        console.log(item);
         item.Buy(_amount, _callback);
-        //callback();
     }
 
-    this.StockItem = function(name, productCode, amount, callback){
-        let item = GetItem(name,productCode);
+    this.StockItem = function (name, productCode, amount, callback) {
+        let item = GetItem(name, productCode);
         item.Restock(amount, callback);
+    }
+
+    this.AddNewItem = function (productCode, name, department, price, stock, description, callback) {
+        if (ContainsCode(productCode)) {
+            console.log(`Product Code: ${productCode} Already exists.`);
+            callback();
+        } else {
+            let newItem = new item(null, productCode, name, department,description, price, stock);
+            activeCallback = callback;
+            newItem.AddNew(_LoadAll);
+        }
     }
 
 }

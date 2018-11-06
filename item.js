@@ -19,59 +19,63 @@ function Item(uuid, productCode, productName, departmentName, description, price
     this.Buy = function (units, callback) {
         //Want it to be public
         //buy the item and reduce the stock quantity buy the amount passed in
-        this.StockQuantity -= units;
+        this.StockQuantity -= parseInt(units);
         console.log('Bought: ' + units + '\nLeft: ' + this.StockQuantity);
-        activeCallback = callback;// || activeCallback;
-        //console.log('Bought: ' + units +'\nLeft: ' + this.StockQuantity);
-        //ApplyChange();
-        //return;
+        activeCallback = callback;
+
+        ApplyChange(this);
     };
 
     this.Restock = function (units, callback) {
-        this.StockQuantity += units;
+        this.StockQuantity += parseInt(units);
         activeCallback = callback || activeCallback;
+        console.log('Stocked: ' + units + '\nAvailable: ' + this.StockQuantity);
 
-        ApplyChange();
-        return;
+        ApplyChange(this);
     };
 
-    let ApplyChange = function () { //keep hidden
-        if (uuid === '') {
-            db.Connect();
+    this.AddNew = function (callback) {
+        activeCallback = callback;
+        console.log(_uuid);
+        ApplyChange(this);
+    }
 
-            db.GetConnection().query('INSERT INTO Product SET ?', {
-                ProductCode: this.ProductCode,
-                ProductName: this.ProductName,
-                DepartmentName: this.DepartmentName,
-                Description: this.Description,
-                Price: this.Price,
-                StockQuantity: this.StockQuantity
-            }, InsertCallback);
+    let ApplyChange = function (item) { //keep hidden
+        ItemDisplay();
+        if (uuid === null) {
+            db.Connect();
+            db.GetConnection().query('INSERT INTO Product (ProductCode,ProductName,DepartmentName,Description,Price,StockQuantity) ' +
+                'VALUES (?,?,?,?,?,?)', [
+                    item.ProductCode,
+                    item.ProductName,
+                    item.DepartmentName,
+                    item.Description,
+                    parseFloat(item.Price),
+                    parseInt(item.StockQuantity)
+                ], ApplyChangeCallback);
 
         } else {
-            db.GetConnection().query(connection.query(
-                "UPDATE products SET ? WHERE ?",
+            db.Connect();
+            db.GetConnection().query(
+                "UPDATE Product SET ProductCode = ?, ProductName = ?, DepartmentName = ?, Description = ?, Price = ?, StockQuantity = ? " +
+                "WHERE uuid = ?",
                 [
-                    {
-                        ProductCode: this.ProductCode,
-                        ProductName: this.ProductName,
-                        DepartmentName: this.DepartmentName,
-                        Description: this.Description,
-                        Price: this.Price,
-                        StockQuantity: this.StockQuantity
-                    },
-                    {
-                        uuid: _uuid
-                    }
+                    item.ProductCode,
+                    item.ProductName,
+                    item.DepartmentName,
+                    item.Description,
+                    item.Price,
+                    item.StockQuantity,
+                    _uuid
                 ],
-                InsertCallback));
+                ApplyChangeCallback);
         }
     }
 
-    function InsertCallback(error, result) {
+    function ApplyChangeCallback(error, result) {
         if (error) {
             console.log(error);
-            connection.end();
+            db.CloseConnection();
         }
         console.log(result);
         db.CloseConnection();

@@ -128,6 +128,7 @@ function ManagerSelect(result) {
             AddInventory();
             break;
         case 'Create New Product':
+            CreateNewProduct();
             break;
         case 'Back':
             LoadAll(Main);
@@ -137,6 +138,50 @@ function ManagerSelect(result) {
             break;
 
     }
+}
+
+function CreateNewProduct() {
+    var message = [{
+        message: 'What is the new Code (xx-###-xx): ',
+        name: 'productCode'
+    },
+    {
+        message: 'What is the new Product name: ',
+        name: 'productName'
+    },
+    {
+        type: 'list',
+        message: 'What is the Department: ',
+        name: 'department',
+        choices: ['Kitchen', 'Kids', 'Produce', 'Office']
+    },
+    {
+        type:'number',
+        message: 'What is the price: ',
+        name:'price'
+    },
+    {
+        type:'number',
+        message: 'What is the Quantity in stock: ',
+        name:'quantity'
+    },
+    {
+        message: 'What is the Description: ',
+        name: 'description'
+    }];
+    prompt(message, CreateNewProductResponse);
+}
+
+function CreateNewProductResponse(result) {
+    if(isNaN(result.price) || isNaN(result.quantity)) {
+        console.log('Price and Quantity have to be numbers.');
+        Manager();
+    }else{
+
+        Items.AddNewItem(result.productCode, result.productName, result.department, parseFloat(result.price), parseInt(result.quantity), result.description, Manager);
+
+    }
+
 }
 
 function MainResult(result) {
